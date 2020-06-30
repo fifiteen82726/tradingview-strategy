@@ -1,0 +1,42 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © allanster
+
+//@version=4
+strategy(title = "How To Set Backtest Range", shorttitle = "Dates", overlay = true, precision = 8, max_bars_back = 200, pyramiding = 0, initial_capital = 100000, 
+     currency = currency.NONE, default_qty_type = strategy.cash, default_qty_value = 100000, commission_type = "percent", commission_value = 0.27)
+
+// Revision:        5
+// Author:          @allanster 
+
+// === INPUT MA LENGTHS ===
+fastMA    = input(defval = 14,   title = "FastMA",          type = input.integer, minval = 1, step = 1)
+slowMA    = input(defval = 28,   title = "SlowMA",          type = input.integer, minval = 1, step = 1)
+
+// === INPUT BACKTEST RANGE ===
+fromMonth = input(defval = 1,    title = "From Month",      type = input.integer, minval = 1, maxval = 12)
+fromDay   = input(defval = 1,    title = "From Day",        type = input.integer, minval = 1, maxval = 31)
+fromYear  = input(defval = 2020, title = "From Year",       type = input.integer, minval = 1970)
+thruMonth = input(defval = 1,    title = "Thru Month",      type = input.integer, minval = 1, maxval = 12)
+thruDay   = input(defval = 1,    title = "Thru Day",        type = input.integer, minval = 1, maxval = 31)
+thruYear  = input(defval = 2112, title = "Thru Year",       type = input.integer, minval = 1970)
+
+// === INPUT SHOW PLOT ===
+showDate  = input(defval = true, title = "Show Date Range", type = input.bool)
+
+// === FUNCTION EXAMPLE ===
+start     = timestamp(fromYear, fromMonth, fromDay, 00, 00)        // backtest start window
+finish    = timestamp(thruYear, thruMonth, thruDay, 23, 59)        // backtest finish window
+window()  => time >= start and time <= finish ? true : false       // create function "within window of time"
+
+// === LOGIC ===
+crossOv   = crossover (sma(close, fastMA), sma(close, slowMA))     // true when fastMA crosses over slowMA
+crossUn   = crossunder(sma(close, fastMA), sma(close, slowMA))     // true when fastMA crosses under slowMA
+
+// === EXECUTION ===
+strategy.entry("L", strategy.long, when = window() and crossOv)    // enter long when "within window of time" AND crossover
+strategy.close("L", when = window() and crossUn)                   // exit long when "within window of time" AND crossunder         
+
+// === PLOTTING ===
+bgcolor(color = showDate and window() ? color.gray : na, transp = 90)                                     // plot "within window of time"
+plot(sma(close, fastMA), title = 'FastMA', color = color.yellow, linewidth = 2, style = plot.style_line)  // plot FastMA
+plot(sma(close, slowMA), title = 'SlowMA', color = color.aqua,   linewidth = 2, style = plot.style_line)  // plot SlowMA
