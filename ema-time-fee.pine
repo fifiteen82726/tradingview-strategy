@@ -2,8 +2,8 @@
 // © allanster
 
 //@version=4
-strategy(title = "How To Set Backtest Range", shorttitle = "Dates", overlay = true, precision = 8, max_bars_back = 200, pyramiding = 0, initial_capital = 100000, 
-     currency = currency.NONE, default_qty_type = strategy.cash, default_qty_value = 100000, commission_type = "percent", commission_value = 0.27)
+strategy(title = "MA cross plus time period", shorttitle = "MA+time", overlay = true, precision = 8, max_bars_back = 200, pyramiding = 0, initial_capital = 1000, 
+     currency = currency.NONE, default_qty_type = strategy.percent_of_equity, default_qty_value = 100, commission_type = "percent", commission_value = 0.1)
 
 // Revision:        5
 // Author:          @allanster 
