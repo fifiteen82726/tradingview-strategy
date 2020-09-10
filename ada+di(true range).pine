@@ -1,0 +1,19 @@
+study(title='ADX + DI x Upgraded to Pine v4 x KingThies',shorttitle='AD + DI x KT')
+
+len = input(title="Length", type=input.integer, defval=14), 
+th = input(title="Threshold", type=input.integer, defval=25)
+TrueRange = max(max(high - low, abs(high - nz(close[1]))), abs(low - nz(close[1])))
+DirectionalMovementPlus = high - nz(high[1]) > nz(low[1]) - low ? max(high - nz(high[1]), 0) : 0
+dwnMv = nz(low[1]) - low > high - nz(high[1]) ? max(nz(low[1]) - low, 0) : 0
+
+SmoothedTrueRange = 0.0
+smoothedPosMV = 0.0
+smoothedNegMV = 0.0
+
+SmoothedTrueRange := nz(SmoothedTrueRange[1]) - nz(SmoothedTrueRange[1]) / len + TrueRange
+smoothedPosMV := nz(smoothedPosMV[1]) - nz(smoothedPosMV[1]) / len + DirectionalMovementPlus
+smoothedNegMV := nz(smoothedNegMV[1]) - nz(smoothedNegMV[1]) / len + dwnMv
+diPos = smoothedPosMV / SmoothedTrueRange * 100, diNeg = smoothedNegMV / SmoothedTrueRange * 100
+DX = abs(diPos - diNeg) / (diPos + diNeg) * 100, ADX = sma(DX, len)
+ada = ema(ADX,200),plot(diPos, color=color.green, title="DI+"), plot(diNeg, color=color.red, title="DI-")
+plot(ADX, color=color.yellow, title="ADX"), hline(th, color=color.white, linestyle=hline.style_dashed)

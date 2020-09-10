@@ -1,0 +1,26 @@
+study(title ="ADX and DI Advance [SystemAlpha]", shorttitle="Advance ADX [SA]")
+
+adxlen      = input(13, title="ADX Smoothing")
+dilen       = input(13, title="DI Period")
+keyLevel    = input(23, title="Keylevel for ADX")
+showhist    = input(true, title="Show Histogram")
+showDMI    = input(false, title="Show DMI")
+
+// == USE BUILT-IN DMI FUNCTION TO DETERMINE ADX
+[diplus, diminus, adx] = dmi(dilen, adxlen)
+
+di = (diplus - diminus)
+
+// di >= 0 means bullish
+col_di = di >= 0 ? color.teal : color.red
+
+// Create plots
+hline(keyLevel, title="Keylevel", linestyle=hline.style_solid,color=color.gray)
+
+// Histogram
+plot(showhist? adx : na, color=col_di, style=plot.style_columns, histbase=0, transp=40, title="Histogram")
+
+// Plot DMI lines
+plot(not showhist? adx: na, color=col_di, title="ADX")
+plot(showDMI? diplus : na, color=#0094FF, title="+DI")
+plot(showDMI? diminus : na, color=#FF6A00, title="-DI")
