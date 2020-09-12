@@ -1,6 +1,6 @@
 //@version=4
 // author: codachang0726
-strategy(title = "MA cross plus time period", shorttitle = "MA+time", overlay = true, precision = 8, max_bars_back = 200, pyramiding = 0, initial_capital = 1000, 
+strategy(title = "(S)MA+ADX+DI+time", shorttitle = "(S)MA+ADX+DI+time", overlay = true, precision = 8, max_bars_back = 200, pyramiding = 0, initial_capital = 1000, 
      currency = currency.NONE, default_qty_type = strategy.percent_of_equity, default_qty_value = 100, commission_type = "percent", commission_value = 0.1)
 
 // === INPUT MA LENGTHS ===
@@ -13,7 +13,7 @@ fromDay   = input(defval = 1,    title = "From Day",        type = input.integer
 fromYear  = input(defval = 2018, title = "From Year",       type = input.integer, minval = 1970)
 thruMonth = input(defval = 1,    title = "Thru Month",      type = input.integer, minval = 1, maxval = 12)
 thruDay   = input(defval = 1,    title = "Thru Day",        type = input.integer, minval = 1, maxval = 31)
-thruYear  = input(defval = 2019, title = "Thru Year",       type = input.integer, minval = 1970)
+thruYear  = input(defval = 2022, title = "Thru Year",       type = input.integer, minval = 1970)
 
 // === INPUT SHOW PLOT ===
 showDate  = input(defval = true, title = "Show Date Range", type = input.bool)

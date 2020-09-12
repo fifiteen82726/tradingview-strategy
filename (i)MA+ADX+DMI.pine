@@ -1,0 +1,36 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+//@version=4
+// author: codachang0726
+study(title = "(i)MA+ADX+DMI", shorttitle = "(i)MA+ADX+DMI", overlay=true)
+
+// === INPUT MA LENGTHS ===
+fastMA    = input(defval = 7,   title = "FastMA",          type = input.integer, minval = 1, step = 1)
+slowMA    = input(defval = 14,   title = "SlowMA",          type = input.integer, minval = 1, step = 1)
+
+
+// === MA LOGIC ===
+crossOv   = crossover (sma(close, fastMA), sma(close, slowMA))     // true when fastMA crosses over slowMA
+crossUn   = crossunder(sma(close, fastMA), sma(close, slowMA))     // true when fastMA crosses under slowMA
+
+// DI+ADX
+adxlen      = input(14, title="ADX Smoothing")
+dilen       = input(14, title="DI Period")
+keyLevel    = input(20, title="Keylevel for ADX")
+[diplus, diminus, adx] = dmi(dilen, adxlen)
+di = (diplus - diminus)
+
+// === BUY/SELL Condition ===
+buy = di > 0 and crossOv and adx > keyLevel
+sell = di < 0 and crossUn and adx > keyLevel
+
+
+// === PLOTTING ===                                   // plot "within window of time"
+p1 = plot(sma(close, fastMA), title = 'FastMA', color = color.yellow, linewidth = 2, style = plot.style_line)  // plot FastMA
+p2 = plot(sma(close, slowMA), title = 'SlowMA', color = color.aqua,   linewidth = 2, style = plot.style_line)  // plot SlowMA
+fill(p1, p2, color=color.silver, transp=50)
+bgcolor(buy ? color.green : sell ? color.red : na,transp=50)
+
+// plotshape(buy, style=shape.xcross)
+// plotshape(buy, color=color.black, style=shape.arrowup, text="Buy", location=location.bottom)
+// plotshape(sell, color=color.black, style=shape.arrowdown, text="Sell", location=location.top)
+
