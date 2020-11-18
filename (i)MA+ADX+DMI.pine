@@ -23,14 +23,10 @@ di = (diplus - diminus)
 buy = di > 0 and crossOv and adx > keyLevel
 sell = di < 0 and crossUn and adx > keyLevel
 
-
 // === PLOTTING ===                                   // plot "within window of time"
 p1 = plot(sma(close, fastMA), title = 'FastMA', color = color.yellow, linewidth = 2, style = plot.style_line)  // plot FastMA
 p2 = plot(sma(close, slowMA), title = 'SlowMA', color = color.aqua,   linewidth = 2, style = plot.style_line)  // plot SlowMA
 fill(p1, p2, color=color.silver, transp=50)
+alertcondition(buy, title='Buy', message='CrossOver + DI + ADX')
+alertcondition(sell, title='Sell', message='CrossUn + DI + ADX')
 bgcolor(buy ? color.green : sell ? color.red : na,transp=50)
-
-// plotshape(buy, style=shape.xcross)
-// plotshape(buy, color=color.black, style=shape.arrowup, text="Buy", location=location.bottom)
-// plotshape(sell, color=color.black, style=shape.arrowdown, text="Sell", location=location.top)
-
